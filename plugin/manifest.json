@@ -1,7 +1,0 @@
-{
-  "name": "Guide Mate",
-  "id": "739342962452731553",
-  "api": "1.0.0",
-  "main": "plugin.js",
-  "ui": "index.html"
-}
