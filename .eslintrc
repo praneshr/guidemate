@@ -1,0 +1,30 @@
+{
+  "extends": ["airbnb-base", "plugin:@typescript-eslint/recommended"],
+  "rules": {
+    "no-tabs": "off",
+    "@typescript-eslint/indent": ["error", 2],
+    "max-len": ["error", {
+      "code": 100
+    }],
+    "arrow-body-style": "off",
+    "no-underscore-dangle": "off",
+    "class-methods-use-this": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".ts"]
+      }
+    },
+  },
+  "env": {
+    "mocha": true,
+    "node": true,
+    "browser": true,
+  },
+  "globals": {
+    "figma": "readonly",
+    "parent": "readonly",
+    "__html__": "readonly",
+  }
+}
