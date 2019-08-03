@@ -37,3 +37,8 @@ export interface FormValues {
 export interface FormValuesAccess {
   [FormInputs: number]: string;
 }
+
+export interface Message {
+  type: MessageTypes;
+  data: any;
+}

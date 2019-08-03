@@ -6,7 +6,6 @@ import { ShortcutTypes, MessageTypes } from '../types';
 
 const tippy = require('tippy.js').default;
 
-
 @customElement('x-easy-shortcuts')
 export default class EasyShortcuts extends LitElement {
   public static get styles(): CSSResult {
@@ -30,10 +29,13 @@ export default class EasyShortcuts extends LitElement {
    */
   private shortcutClick_(event: any): void {
     const { type } = event.currentTarget.dataset;
-    parent.postMessage({ pluginMessage: { type: MessageTypes.SHORTCUTS, data: parseInt(type) } }, '*');
+    window.parent.postMessage({
+      pluginMessage: { type: MessageTypes.SHORTCUTS, data: Number(type) },
+    }, '*');
   }
 
   public firstUpdated(): void {
+    // Initiate tippy tooltip.
     tippy(this.renderRoot.querySelectorAll('.shortcut'), {
       placement: 'bottom',
       delay: 100,

@@ -2,10 +2,12 @@ import {
   LitElement, customElement, html, TemplateResult, css, CSSResult,
 } from 'lit-element';
 
-import './easy-shortcuts';
-import Form from './form';
-
 import { MessageTypes } from '../types';
+import './easy-shortcuts';
+// eslint-disable-next-line import/no-duplicates
+import './form';
+// eslint-disable-next-line import/no-duplicates
+import Form from './form';
 
 @customElement('x-guidemate')
 export default class extends LitElement {
@@ -15,6 +17,7 @@ export default class extends LitElement {
         font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
         color: var(--font-color);
       }
+
       .guidemate {
         margin-bottom: 20px;
       }
@@ -51,10 +54,16 @@ export default class extends LitElement {
     `;
   }
 
-  private click_(): void {
+  /**
+   * Retrieves the form value and pass a message to the figma main to add guides with the supplied
+   * value.
+   */
+  public addGuide(): void {
     const form = this.renderRoot.querySelector<Form>('#form');
     const formValue = form.getValues();
-    parent.postMessage({ pluginMessage: { type: MessageTypes.ADD_GUIDES, data: formValue } }, '*');
+    window.parent.postMessage({
+      pluginMessage: { type: MessageTypes.ADD_GUIDES, data: formValue },
+    }, '*');
   }
 
   public render(): TemplateResult {
@@ -62,9 +71,9 @@ export default class extends LitElement {
       <div class="guidemate">
         <x-easy-shortcuts></x-easy-shortcuts>
         <x-form id="form"></x-form>
-        <button class="primary" @click=${this.click_}>Add Guides</button>
+        <button class="primary" @click=${this.addGuide}>Add Guides</button>
         <div class="contribute">
-          © 2019 Pranesh Ravi. If you enjoy Guide Mate, consider
+          If you enjoy Guide Mate, consider
           <a href="https://www.buymeacoffee.com/cAHgxoB" target="_blank"> buying</a> me a coffee :)
         </div>
       </div>

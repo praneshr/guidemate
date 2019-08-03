@@ -1,13 +1,14 @@
 import {
   LitElement, css, html, customElement, TemplateResult, property, CSSResult,
 } from 'lit-element';
-import { FormValues, FormInputs } from '../types';
+
+import { FormValues } from '../types';
 
 @customElement('x-form-input')
 export default class FormInput extends LitElement {
   @property({ type: String }) private placeholder = '';
 
-  @property({ type: Number }) public id;
+  @property({ type: Number }) public id: any;
 
   public static get styles(): CSSResult {
     return css`
@@ -36,6 +37,9 @@ export default class FormInput extends LitElement {
     `;
   }
 
+  /**
+   * Return the value of the input and the id of this component.
+   */
   public getValue(): FormValues {
     const input = this.renderRoot.querySelector('input');
     return {
