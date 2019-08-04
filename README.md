@@ -2,7 +2,7 @@
 
 ![Guide Mate](https://i.ibb.co/R6V6qkZ/Banner.png)
 
-Guide Mate is a [Figma](figma.com) plugin which makes adding guides to your frames or shapes super easy. It provides shortcuts to add most commonly used guides and a form to add custom guides. It will be an excellent companion when you're working with grid based design systems.
+Guide Mate is a [Figma](https://figma.com) plugin which makes adding guides to your frames or shapes super easy. It provides shortcuts to add most commonly used guides and a form to add custom guides. It will be an excellent companion when you're working with grid based design systems.
 
 ## Features
 - Adds side(left, right, top and bottom), vertical and horizontal midpoint guides to a layer or frame with just a click.
