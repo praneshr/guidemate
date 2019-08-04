@@ -13,15 +13,9 @@ Guide Mate is a [Figma](https://figma.com) plugin which makes adding guides to y
 - For side and midpoint guides, use the buttons in the shortcut panels. Each button is enabled with tooltip to explain the purpose of each button.
 - Use the form for creating more customized guides. Each input field is self-explanatory. After filling the input just hit the "Add Guides" button.
 
-## Samples
+## In Action
 
-Generate a 12 column vertical grid on a frame with 30px gutter and 20px margin on the right and left side.
-
-![12 column grid](https://i.ibb.co/55dhFjC/Screenshot-2019-08-03-at-10-43-38-PM.png)
-
-Generate a grid on a rectangle shape with a 30px margin on all the sides.
-
-![margin on rectangle](https://i.ibb.co/MB9kXVM/Screenshot-2019-08-03-at-10-48-18-PM.png)
+![Guide Mate in action](https://i.ibb.co/cY42cZ6/ezgif-com-video-to-gif.gif)
 
 ## Upcoming Updates
 
