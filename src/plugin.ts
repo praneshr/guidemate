@@ -18,9 +18,22 @@ const addGuide = (frame: FrameNode, guides: Guide[]): void => {
   const filteredGuides = guides.filter(
     (guide): boolean => !existingGuidesLookupMap.includes(guideString(guide)),
   );
-
-  // eslint-disable-next-line no-param-reassign
-  frame.guides = frame.guides.concat(filteredGuides);
+  const { parent } = frame;
+  const clone = frame.clone();
+  const isFrameSelected = clone.getPluginData('x-selected') === 'true';
+  const selectedInClone = clone.findOne(
+    (node): boolean => node.getPluginData('x-selected') === 'true',
+  );
+  clone.guides = guides.length === 0 ? [] : frame.guides.concat(filteredGuides);
+  if (isFrameSelected) {
+    figma.currentPage.selection = [clone as any];
+    clone.setPluginData('x-selected', 'false');
+  } else if (selectedInClone) {
+    figma.currentPage.selection = [selectedInClone as any];
+    selectedInClone.setPluginData('x-selected', 'false');
+  }
+  parent.appendChild(clone);
+  frame.remove();
 };
 
 /**
@@ -29,6 +42,10 @@ const addGuide = (frame: FrameNode, guides: Guide[]): void => {
  * @param node Current selection node.
  */
 const findFrame = (node: BaseNode): FrameNode => {
+  if (node.type === 'PAGE') {
+    figma.ui.postMessage({ type: MessageTypes.NO_FRAME_ERROR });
+    return undefined;
+  }
   if (node.type === 'FRAME') {
     return node;
   }
@@ -41,23 +58,20 @@ const findFrame = (node: BaseNode): FrameNode => {
  */
 const getSelection = (): SceneNode | undefined => {
   const { selection } = figma.currentPage;
+
+  if (selection.length === 0) {
+    figma.ui.postMessage({ type: MessageTypes.NO_SELECTION_ERROR });
+    return undefined;
+  }
+
+  if (selection.length > 1) {
+    figma.ui.postMessage({ type: MessageTypes.MULTI_SELECTION_ERROR });
+    return undefined;
+  }
+
   const currentSelection = selection[0];
-
-  if (currentSelection) {
-    return currentSelection;
-  }
-
-  const frames = figma.currentPage.findAll((node): boolean => node.type === 'FRAME');
-
-  if (frames.length === 1) {
-    return frames[0] as SceneNode;
-  }
-
-  if (frames.length > 1) {
-    throw Error('Multiple frames detected. Select one layer or frame to use Guide Mate.');
-  }
-
-  throw Error('Add at least one frame to use Guide Mate.');
+  currentSelection.setPluginData('x-selected', 'true');
+  return currentSelection;
 };
 
 /**
@@ -66,43 +80,43 @@ const getSelection = (): SceneNode | undefined => {
  */
 const handleShortcuts = (shortcut: ShortcutTypes): void => {
   const currentSelection = getSelection();
+  if (!currentSelection) return;
   const frame = findFrame(currentSelection);
+  if (!frame) return;
   const {
     width, height, x: selectionX, y: selectionY,
   } = currentSelection;
   const isSelectedFrame = frame === currentSelection;
   const x = isSelectedFrame ? 0 : selectionX;
   const y = isSelectedFrame ? 0 : selectionY;
-  let guide: Guide;
+  let guide: Guide[];
 
   switch (shortcut) {
     case ShortcutTypes.LEFT:
-      guide = { axis: 'X', offset: x };
+      guide = [{ axis: 'X', offset: x }];
       break;
     case ShortcutTypes.RIGHT:
-      guide = { axis: 'X', offset: x + width };
+      guide = [{ axis: 'X', offset: x + width }];
       break;
     case ShortcutTypes.VERTICAL_CENTER:
-      guide = { axis: 'X', offset: x + (width / 2) };
+      guide = [{ axis: 'X', offset: x + (width / 2) }];
       break;
     case ShortcutTypes.TOP:
-      guide = { axis: 'Y', offset: y };
+      guide = [{ axis: 'Y', offset: y }];
       break;
     case ShortcutTypes.HORIZONTAL_CENTER:
-      guide = { axis: 'Y', offset: y + (height / 2) };
+      guide = [{ axis: 'Y', offset: y + (height / 2) }];
       break;
     case ShortcutTypes.BOTTOM:
-      guide = { axis: 'Y', offset: y + height };
+      guide = [{ axis: 'Y', offset: y + height }];
       break;
     case ShortcutTypes.CLEAR:
-      // If the shortcut is clear, clear all the guides in the selected frame and do not proceed
-      // further.
-      frame.guides = [];
-      return;
+      guide = [];
+      break;
     default:
       console.warn(`Unhandled shortcut: ${shortcut}`);
   }
-  addGuide(frame, [guide]);
+  addGuide(frame, guide);
 };
 
 /**
@@ -150,7 +164,9 @@ const calculateGuideBlock = (
  */
 const handleAddGuides = (formData: FormValues[]): void => {
   const currentSelection = getSelection();
+  if (!currentSelection) return;
   const frame = findFrame(currentSelection);
+  if (!frame) return;
   const {
     width, height, x: selectionX, y: selectionY,
   } = currentSelection;

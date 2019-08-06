@@ -1,5 +1,5 @@
 import {
-  LitElement, customElement, html, TemplateResult, css, CSSResult,
+  LitElement, customElement, html, TemplateResult, css, CSSResult, property,
 } from 'lit-element';
 
 import { MessageTypes } from '../types';
@@ -11,6 +11,16 @@ import Form from './form';
 
 @customElement('x-guidemate')
 export default class extends LitElement {
+
+  @property({ type: Number }) private errorType: 0;
+
+  @property({ type: Number, attribute: false }) private timerId;
+
+  public constructor() {
+    super();
+    this.resetError = this.resetError.bind(this);
+  }
+
   public static get styles(): CSSResult {
     return css`
       :host {
@@ -47,11 +57,54 @@ export default class extends LitElement {
         color: #474753;
       }
 
+      .error-message-container {
+        position: fixed;
+        width: 250px;
+        left: 35px;
+        background-color: #DE5F5A;
+        text-align: center;
+        padding: 12px;
+        color: var(--font-color);
+        bottom: 0;
+        transform: translate3d(0, 50px, 0);
+        transition: all 0.2s ease;
+        font-size: 12px;
+        border-radius: 4px 4px 0 0;
+        font-weight: 500;
+      }
+
+      .error-message-container.show {
+        transform: translate3d(0, 0px, 0);
+      }
+
       a {
         color: var(--primary-color);
         text-decoration: none;
       }
     `;
+  }
+
+  private resetError(): void {
+    this.timerId = undefined;
+    this.errorType = MessageTypes.UNKNOWN;
+  }
+
+  public firstUpdated(): void {
+    window.onmessage = ({ data }: any): void => {
+      const { type } = data.pluginMessage;
+      if (type !== this.errorType) {
+        if (!this.timerId) {
+          this.errorType = type;
+        } else {
+          this.timerId = undefined;
+          this.errorType = MessageTypes.UNKNOWN;
+          window.setTimeout((): void => {
+            this.errorType = type;
+          }, 400);
+        }
+        this.timerId = window.setTimeout(this.resetError, 3000);
+      }
+    };
   }
 
   /**
@@ -66,11 +119,28 @@ export default class extends LitElement {
     }, '*');
   }
 
+  private getErrorMessage(): string {
+    switch (this.errorType) {
+      case MessageTypes.NO_SELECTION_ERROR:
+        return 'No frame or shape selected.';
+      case MessageTypes.MULTI_SELECTION_ERROR:
+        return 'Multi selection not supported.';
+      case MessageTypes.NO_FRAME_ERROR:
+        return 'Selected item is not inside a frame.';
+      default:
+        return null;
+    }
+  }
+
   public render(): TemplateResult {
+    const errorMessage = this.getErrorMessage();
     return html`
       <div class="guidemate">
         <x-easy-shortcuts></x-easy-shortcuts>
         <x-form id="form"></x-form>
+        <div class="error-message-container ${errorMessage ? 'show' : ''}">
+          ${errorMessage}
+        </div>
         <button class="primary" @click=${this.addGuide}>Add Guides</button>
         <div class="contribute">
           If you enjoy Guide Mate, consider

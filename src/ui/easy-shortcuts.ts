@@ -14,11 +14,15 @@ export default class EasyShortcuts extends LitElement {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: var(--side-padding);
         border-bottom: 1px solid #1f1f2d;
       }
       .shortcut {
         cursor: pointer;
+        padding: var(--side-padding);
+        outline: none;
+      }
+      .shortcut:hover {
+        background: var(--border-color);
       }
     `;
   }

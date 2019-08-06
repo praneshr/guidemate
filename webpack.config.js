@@ -14,6 +14,7 @@ module.exports = {
     plugin: path.join(__dirname, 'src', 'plugin.ts'),
   },
   mode: isProd ? 'production' : 'development',
+  devtool: isProd ? false : 'inline-source-map',
   output: {
     path: path.join(__dirname, 'plugin'),
     publicPath: '/',

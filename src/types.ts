@@ -13,6 +13,9 @@ export enum MessageTypes {
   UNKNOWN = 0,
   SHORTCUTS = 1,
   ADD_GUIDES = 2,
+  NO_SELECTION_ERROR = 3,
+  MULTI_SELECTION_ERROR = 4,
+  NO_FRAME_ERROR = 5,
 }
 
 export enum FormInputs {
