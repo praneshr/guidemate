@@ -1,17 +1,17 @@
-> This is an alpha release. Please file a bug when you notice one.
-
 ![Guide Mate](https://i.ibb.co/R6V6qkZ/Banner.png)
 
 Guide Mate is a [Figma](https://figma.com) plugin which makes adding guides to your frames or shapes super easy. It provides shortcuts to add most commonly used guides and a form to add custom guides. It will be an excellent companion when you're working with grid based design systems.
 
-## Features
-- Adds side(left, right, top and bottom), vertical and horizontal midpoint guides to a layer or frame with just a click.
-- Adds guides to a layer or frame based on margins.
-- Automatically adds guides based on your grid requirements.
-
 ## Usage
-- For side and midpoint guides, use the buttons in the shortcut panels. Each button is enabled with tooltip to explain the purpose of each button.
-- Use the form for creating more customized guides. Each input field is self-explanatory. After filling the input just hit the "Add Guides" button.
+- Select a frame, group or shape.
+- Open Guide Mate from the plugins menu.
+- Click on one of the icon in the shortcut panel to add left, right, top, bottom or midpoint guides.
+- Enter details in the form and click on "Add Guides" to generate custom guides.
+
+## Limitations
+- At least one frame or group or shape should be selected before using the plugin.
+- Multi selection is not supported. Instead, you can group the items and use the plugin.
+- Any selected items should be inside a frame. Page level guides are not supported yet.
 
 ## In Action
 
@@ -19,6 +19,7 @@ Guide Mate is a [Figma](https://figma.com) plugin which makes adding guides to y
 
 ## Upcoming Updates
 
+- Ability to add page level guides.
 - Ability to pre-populate form will last used values.
 - Ability to clear all input values with a click.
 - Ability to save most used guide parameters locally.
